@@ -44,7 +44,7 @@
 - [x] Scene-Load / Save (JSON)
 - [x] Hierarchie + Inspector
 - [x] Kontext-Menüs Add / Delete
-- [ ] Scene-Validation (IDs, Bounds, fehlende Referenzen)
+- [x] Scene-Validation (IDs, Bounds, fehlende Referenzen)
 - [ ] Asset-Browser (ContentRoot durchsuchen)
 - [ ] Auto-Reload bei Dateiänderungen
 - [ ] Multi-Projekt-Support (Engine-Version + Game-Pfad getrennt)
