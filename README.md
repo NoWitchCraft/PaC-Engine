@@ -1,7 +1,7 @@
 # 🧩 PaC Engine  
 ### A modular C# framework & editor for building modern 2D point-and-click adventure games
 
-![PaC Engine Logo](./Docs/Images/logo.png)  
+![PaC Engine Logo](./Docs/Images/Logo.png)  
 [Platzhalter: Screenshot des Editors mit Viewport + Hierarchy + Inspector]
 
 ---
