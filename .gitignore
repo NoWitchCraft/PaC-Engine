@@ -426,3 +426,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/.vs
+.vs/PaCEngine/CopilotIndices/17.14.1290.42047/CodeChunks.db
