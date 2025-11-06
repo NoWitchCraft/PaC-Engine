@@ -3,6 +3,9 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Engine.Config;
+using Engine.Core;
+using Engine.IO;
+using Engine.Content;
 using Engine.Common;
 
 namespace Engine.Data.Scene
@@ -26,13 +29,14 @@ namespace Engine.Data.Scene
         /// </summary>
         public static SceneDTO Load(string absoluteFilePath)
         {
-            if (!File.Exists(absoluteFilePath))
+            var fs = ServiceRegistry.Get<IFileSystem>();
+            if (!fs.FileExists(absoluteFilePath))
                 throw new FileNotFoundException($"Scene-Datei nicht gefunden: {absoluteFilePath}");
 
-            string json = File.ReadAllText(absoluteFilePath);
+            string json = fs.ReadAllText(absoluteFilePath);
             var dto = JsonSerializer.Deserialize<SceneDTO>(json, _jsonOptions);
             if (dto == null)
-                throw new InvalidDataException($"Szene konnte nicht deserialisiert werden: {absoluteFilePath}");
+                throw new InvalidOperationException($"Scene konnte nicht gelesen werden: {absoluteFilePath}");
 
             return dto;
         }
@@ -42,9 +46,10 @@ namespace Engine.Data.Scene
         /// </summary>
         public static void Save(SceneDTO scene, string absoluteFilePath)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(absoluteFilePath)!);
+            var fs = ServiceRegistry.Get<IFileSystem>();
+            fs.CreateDirectory(fs.GetDirectoryName(absoluteFilePath));
             string json = JsonSerializer.Serialize(scene, _jsonOptions);
-            File.WriteAllText(absoluteFilePath, json);
+            fs.WriteAllText(absoluteFilePath, json);
         }
 
         /// <summary>
@@ -52,7 +57,8 @@ namespace Engine.Data.Scene
         /// </summary>
         public static SceneDTO LoadFromContent(string relativePath)
         {
-            string full = Settings.ContentPath(relativePath);
+            var resolver = ServiceRegistry.Get<IContentResolver>();
+            var full = resolver.ResolveContentPath(relativePath);
             return Load(full);
         }
 
@@ -61,7 +67,8 @@ namespace Engine.Data.Scene
         /// </summary>
         public static void SaveToContent(SceneDTO scene, string relativePath)
         {
-            string full = Settings.ContentPath(relativePath);
+            var resolver = ServiceRegistry.Get<IContentResolver>();
+            var full = resolver.ResolveContentPath(relativePath);
             Save(scene, full);
         }
     }

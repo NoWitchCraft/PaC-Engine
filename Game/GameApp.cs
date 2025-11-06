@@ -1,8 +1,10 @@
 ﻿using Engine;
 using Engine.Config;
+using Engine.Content;
 using Engine.Core;
 using Engine.Data.Scene;
 using Engine.Diagnostics;
+using Engine.IO;
 
 namespace Game
 {
@@ -22,15 +24,22 @@ namespace Game
             //Load Settings
             Settings.Load(); // settings.json laden
 
-            //Load Services
+            //<Load Services>
             ServiceRegistry.Clear();
+            // Logger
             var logger = new ConsoleLogger(minLevel: LogLevel.Debug);
             ServiceRegistry.Register<ILogger>(logger);
             Log.Use(logger);
 
-            //logging
-            Log.Info(nameof(GameApp), $"ContentRoot = {Settings.Current.ContentRoot}");
+            // FileSystem
+            var fs = new FileSystem();
+            ServiceRegistry.Register<IFileSystem>(fs);
 
+            // ContentResolver (nimmt Settings.Current.ContentRoot)
+            var resolver = new ContentResolver(fs, Settings.Current.ContentRoot);
+            ServiceRegistry.Register<IContentResolver>(resolver);
+
+            Log.Info(nameof(GameApp), $"ContentRootAbs = {resolver.ContentRootAbsolute}");
             var scene = SceneIO.LoadFromContent(@"Scenes/first.scene.json");
             Log.Info(nameof(GameApp), $"Scene loaded: {scene.Id}, BG={scene.BackgroundPath}, Hotspots={scene.Hotspots.Count}");
 
