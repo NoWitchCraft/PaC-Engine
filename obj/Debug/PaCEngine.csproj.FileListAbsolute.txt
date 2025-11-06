@@ -1,2 +1,0 @@
-D:\PaCEngine\obj\Debug\PaCEngine.csproj.AssemblyReference.cache
-D:\PaCEngine\obj\Debug\PaCEngine.csproj.CoreCompileInputs.cache

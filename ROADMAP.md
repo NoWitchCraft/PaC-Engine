@@ -11,7 +11,7 @@
 ### 1. Architektur & Grundsysteme
 - [x] Projektstruktur (`Engine`, `Game`, `Editor`)
 - [x] Settings-System (`settings.json`, Loader)
-- [ ] Logging-System (Debug, Info, Warn, Error mit Timestamp)
+- [x] Logging-System (Debug, Info, Warn, Error mit Timestamp)
 - [ ] Utility-Klassen (`Vector2`, `RectF`, `MathHelper`, etc.)
 - [ ] Core-Loop: Update / Render-Pipeline
 - [ ] ECS- / Entity-System (Actors, Components, Systems)
