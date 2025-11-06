@@ -19,6 +19,19 @@
       "eventPathId": "console_inspect",
       "cursorId": "inspect",
       "highlight": true
+    },
+    {
+      "id": "hotspot",
+      "labelKey": "hotspot",
+      "rect": {
+        "x": 64,
+        "y": 64,
+        "width": 160,
+        "height": 80
+      },
+      "eventPathId": null,
+      "cursorId": null,
+      "highlight": true
     }
   ],
   "musicCueId": null,
