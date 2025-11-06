@@ -1,0 +1,26 @@
+{
+  "id": "menu_room",
+  "backgroundPath": "Rooms/first_room_bg.png",
+  "startPosition": {
+    "x": 220,
+    "y": 610
+  },
+  "walkPath": null,
+  "hotspots": [
+    {
+      "id": "test_Menu",
+      "labelKey": "hs.console",
+      "rect": {
+        "x": 900,
+        "y": 520,
+        "width": 180,
+        "height": 120
+      },
+      "eventPathId": "console_inspect",
+      "cursorId": "inspect",
+      "highlight": true
+    }
+  ],
+  "musicCueId": null,
+  "ambientCueIds": []
+}

@@ -1,0 +1,11 @@
+D:\PacEngine\Engine\bin\Debug\net8.0\Engine.deps.json
+D:\PacEngine\Engine\bin\Debug\net8.0\Engine.dll
+D:\PacEngine\Engine\bin\Debug\net8.0\Engine.pdb
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.GeneratedMSBuildEditorConfig.editorconfig
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.AssemblyInfoInputs.cache
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.AssemblyInfo.cs
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.csproj.CoreCompileInputs.cache
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.dll
+D:\PacEngine\Engine\obj\Debug\net8.0\refint\Engine.dll
+D:\PacEngine\Engine\obj\Debug\net8.0\Engine.pdb
+D:\PacEngine\Engine\obj\Debug\net8.0\ref\Engine.dll

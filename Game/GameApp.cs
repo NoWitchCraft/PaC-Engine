@@ -1,33 +1,50 @@
+﻿using Engine;
 using Engine.Config;
 using Engine.Core;
+using Engine.Data.Scene;
 using Engine.Diagnostics;
 
 namespace Game
 {
+    /// <summary>
+    /// Zentrale Spieleeinstigsklasse. 
+    /// Scenemanagement, Input, Rendering, Audio etc.
+    /// </summary>
+
     public sealed class GameApp : IGameApp
     {
+        // Später: Services (SceneManager, AssetLoader, Input Audio, etc.)
+
         public void Initialize()
         {
-            Settings.Load();
+            // TODO: Content-Pfade setzen, Services initialisieren, erste Scene vorbereiten
 
-            // Services zurücksetzen & Logger registrieren
+            //Load Settings
+            Settings.Load(); // settings.json laden
+
+            //Load Services
             ServiceRegistry.Clear();
             var logger = new ConsoleLogger(minLevel: LogLevel.Debug);
             ServiceRegistry.Register<ILogger>(logger);
             Log.Use(logger);
 
+            //logging
             Log.Info(nameof(GameApp), $"ContentRoot = {Settings.Current.ContentRoot}");
+
+            var scene = SceneIO.LoadFromContent(@"Scenes/first.scene.json");
+            Log.Info(nameof(GameApp), $"Scene loaded: {scene.Id}, BG={scene.BackgroundPath}, Hotspots={scene.Hotspots.Count}");
+
         }
 
         public void Update(float dt)
         {
-            // Beispiel:
-            // Log.Debug(nameof(GameApp), $"dt={dt:F4}");
+            // TODO: Scene updaten, Eingaben verarbeiten, Events ablaufen lassen
         }
 
         public void Shutdown()
         {
             Log.Info(nameof(GameApp), "Shutdown.");
+            //TODO: Ressourcen freigeben, Save/Load flushen
         }
     }
 }

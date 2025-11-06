@@ -31,7 +31,7 @@ namespace Engine.Diagnostics
                 LogLevel.Debug => ConsoleColor.Gray,
                 LogLevel.Info => ConsoleColor.White,
                 LogLevel.Warn => ConsoleColor.Yellow,
-                LogLevel.Error => ConsoleColor.Redm
+                LogLevel.Error => ConsoleColor.Red,
                 _ => ConsoleColor.White
             };
 
