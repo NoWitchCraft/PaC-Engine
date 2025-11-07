@@ -66,8 +66,8 @@ namespace Editor
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Could not initialize project:\n{ex.Message}",
-                    "Editor – Initialization Error",
+                    $"Projekt konnte nicht initialisiert werden:\n{ex.Message}",
+                    "Editor – Initialisierungsfehler",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error
                 );

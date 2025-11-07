@@ -26,7 +26,7 @@ namespace Editor
         {
             var dialog = new System.Windows.Forms.FolderBrowserDialog
             {
-                Description = "Select a location for your new project",
+                Description = "Wählen Sie einen Speicherort für Ihr neues Projekt",
                 ShowNewFolderButton = true,
                 SelectedPath = _selectedLocation
             };
@@ -50,7 +50,7 @@ namespace Editor
             
             if (string.IsNullOrEmpty(name))
             {
-                FullPathTextBlock.Text = "(Enter a project name)";
+                FullPathTextBlock.Text = "(Projektnamen eingeben)";
                 FullPathTextBlock.Foreground = System.Windows.Media.Brushes.Gray;
                 CreateButton.IsEnabled = false;
                 return;
@@ -58,7 +58,7 @@ namespace Editor
 
             if (string.IsNullOrEmpty(_selectedLocation))
             {
-                FullPathTextBlock.Text = "(Select a location)";
+                FullPathTextBlock.Text = "(Speicherort wählen)";
                 FullPathTextBlock.Foreground = System.Windows.Media.Brushes.Gray;
                 CreateButton.IsEnabled = false;
                 return;
@@ -67,7 +67,7 @@ namespace Editor
             // Validate project name (no invalid path characters)
             if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                FullPathTextBlock.Text = "Invalid project name (contains invalid characters)";
+                FullPathTextBlock.Text = "Ungültiger Projektname (enthält ungültige Zeichen)";
                 FullPathTextBlock.Foreground = System.Windows.Media.Brushes.OrangeRed;
                 CreateButton.IsEnabled = false;
                 return;
@@ -147,8 +147,8 @@ Created on {DateTime.Now:yyyy-MM-dd}
             catch (Exception ex)
             {
                 MessageBox.Show(this,
-                    $"Could not create project:\n{ex.Message}",
-                    "Error",
+                    $"Projekt konnte nicht erstellt werden:\n{ex.Message}",
+                    "Fehler",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }

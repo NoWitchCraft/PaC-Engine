@@ -60,8 +60,8 @@ namespace Editor
         {
             var dlg = new OpenFileDialog
             {
-                Title = "Open Game Project (select settings.json)",
-                Filter = "Settings file (settings.json)|settings.json|All files (*.*)|*.*",
+                Title = "Projekt öffnen (settings.json auswählen)",
+                Filter = "Settings-Datei (settings.json)|settings.json|Alle Dateien (*.*)|*.*",
                 CheckFileExists = true
             };
 
@@ -72,7 +72,7 @@ namespace Editor
                     var projectPath = Path.GetDirectoryName(dlg.FileName);
                     if (string.IsNullOrEmpty(projectPath))
                     {
-                        MessageBox.Show(this, "Invalid project path.", "Error", 
+                        MessageBox.Show(this, "Ungültiger Projektpfad.", "Fehler", 
                             MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
@@ -82,8 +82,8 @@ namespace Editor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, $"Could not open project:\n{ex.Message}", 
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(this, $"Projekt konnte nicht geöffnet werden:\n{ex.Message}", 
+                        "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -95,8 +95,8 @@ namespace Editor
                 if (!Directory.Exists(project.Path))
                 {
                     MessageBox.Show(this, 
-                        $"Project path no longer exists:\n{project.Path}", 
-                        "Error", 
+                        $"Projektpfad existiert nicht mehr:\n{project.Path}", 
+                        "Fehler", 
                         MessageBoxButton.OK, 
                         MessageBoxImage.Error);
                     LoadRecentProjects(); // Refresh the list
@@ -116,8 +116,8 @@ namespace Editor
                 if (!File.Exists(settingsPath))
                 {
                     var result = MessageBox.Show(this,
-                        $"The selected path does not contain a settings.json file.\n\nPath: {projectPath}\n\nWould you like to create a new settings.json file?",
-                        "Missing settings.json",
+                        $"Der gewählte Pfad enthält keine settings.json-Datei.\n\nPfad: {projectPath}\n\nMöchten Sie eine neue settings.json-Datei erstellen?",
+                        "settings.json fehlt",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
 
@@ -148,8 +148,8 @@ namespace Editor
             catch (Exception ex)
             {
                 MessageBox.Show(this, 
-                    $"Error opening project:\n{ex.Message}", 
-                    "Error", 
+                    $"Fehler beim Öffnen des Projekts:\n{ex.Message}", 
+                    "Fehler", 
                     MessageBoxButton.OK, 
                     MessageBoxImage.Error);
             }
@@ -164,8 +164,8 @@ namespace Editor
             catch (Exception ex)
             {
                 MessageBox.Show(this,
-                    $"Could not create settings.json:\n{ex.Message}",
-                    "Error",
+                    $"settings.json konnte nicht erstellt werden:\n{ex.Message}",
+                    "Fehler",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 throw;
