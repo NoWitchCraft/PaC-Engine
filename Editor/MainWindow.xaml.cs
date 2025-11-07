@@ -21,6 +21,8 @@ namespace Editor
         private string? _currentScenePath;
 
         private HashSet<string> _expandedNames = new();
+        
+        private LogPanel? _logPanel;
 
         private enum TreeKind { Scene, HotspotGroup, Hotspot, EntitiesGroup }
 
@@ -36,6 +38,7 @@ namespace Editor
         public MainWindow()
         {
             InitializeComponent();
+            Engine.Diagnostics.Log.Info("MainWindow", "Editor window initialized");
         }
 
         private string GenerateUniqueHotspotId(SceneDTO scene)
@@ -67,6 +70,7 @@ namespace Editor
                 RefreshHierarchyPreserveSelection(hs);
                 InspectorHost.Content = hs;
                 StatusText.Text = $"Hotspot added: {hs.Id}";
+                Engine.Diagnostics.Log.Info("MainWindow", $"Added hotspot: {hs.Id}");
             }
         }
 
@@ -95,6 +99,7 @@ namespace Editor
                 InspectorHost.Content = _currentScene;
                 RefreshHierarchyPreserveSelection(_currentScene);
                 StatusText.Text = $"Hotspot deleted: {hs.Id}";
+                Engine.Diagnostics.Log.Info("MainWindow", $"Deleted hotspot: {hs.Id}");
             }
         }
 
@@ -269,6 +274,8 @@ namespace Editor
                 Title = $"PaCEngine Editor – {scene.Id}";
                 StatusText.Text = $"Loaded: {scene.Id} | BG={scene.BackgroundPath} | Hotspots={scene.Hotspots.Count}";
 
+                Engine.Diagnostics.Log.Info("MainWindow", $"Loaded scene: {scene.Id} from {absolutePath}");
+                
                 BuildHierarchy(scene);
                 // Inspector zeigt zunächst die Scene selbst
                 InspectorHost.Content = scene;
@@ -277,6 +284,7 @@ namespace Editor
             }
             catch (Exception ex)
             {
+                Engine.Diagnostics.Log.Error("MainWindow", $"Failed to load scene from {absolutePath}: {ex.Message}");
                 MessageBox.Show(this,
                     $"Could not load scene:\n{ex.Message}",
                     "Load Error",
