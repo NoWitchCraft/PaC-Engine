@@ -17,6 +17,7 @@ namespace Editor
     {
         private SceneDTO? _currentScene;
         private string? _currentScenePath;
+        private ValidationResult? _lastValidationResult;
 
         private HashSet<string> _expandedNames = new();
 
@@ -264,8 +265,11 @@ namespace Editor
                 BuildHierarchy(scene);
                 // Inspector zeigt zunächst die Scene selbst
                 InspectorHost.Content = scene;
+                
                 var vr = SceneValidator.Validate(scene);
+                _lastValidationResult = vr;
                 ShowValidationStatus(vr, prefix: "Loaded");
+                UpdateValidationPanel(vr);
             }
             catch (Exception ex)
             {
@@ -360,11 +364,32 @@ namespace Editor
                         .Replace(".scene", "", StringComparison.OrdinalIgnoreCase);
                 }
 
+                // Validate before saving
+                var vr = SceneValidator.Validate(_currentScene!);
+                _lastValidationResult = vr;
+                
+                if (vr.HasErrors)
+                {
+                    var result = MessageBox.Show(this,
+                        $"Scene has validation errors. Do you want to save anyway?\n\n{string.Join("\n", vr.Issues.Where(i => i.Severity == IssueSeverity.Error).Take(5).Select(i => $"• {i.Message}"))}",
+                        "Validation Errors",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+                    
+                    if (result != MessageBoxResult.Yes)
+                    {
+                        ShowValidationStatus(vr, prefix: "Save cancelled");
+                        UpdateValidationPanel(vr);
+                        return;
+                    }
+                }
+
                 SceneIO.Save(_currentScene!, absolutePath);
                 _currentScenePath = absolutePath;
 
                 Title = $"PaCEngine Editor – {_currentScene!.Id}";
-                StatusText.Text = $"Saved: {_currentScene.Id} → {absolutePath}";
+                ShowValidationStatus(vr, prefix: "Saved");
+                UpdateValidationPanel(vr);
             }
             catch (Exception ex)
             {
@@ -387,7 +412,84 @@ namespace Editor
                 return;
             }
             var vr = SceneValidator.Validate(_currentScene);
+            _lastValidationResult = vr;
             ShowValidationStatus(vr, prefix: "Validated");
+            UpdateValidationPanel(vr);
+        }
+
+        private void ShowValidationIssuesMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (_lastValidationResult == null || _lastValidationResult.Issues.Count == 0)
+            {
+                MessageBox.Show(this, "No validation issues found. Run validation first.", "Validation Issues", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            ValidationPanel.IsExpanded = true;
+            ValidationPanel.Visibility = Visibility.Visible;
+        }
+
+        private void UpdateValidationPanel(ValidationResult vr)
+        {
+            if (vr.Issues.Count > 0)
+            {
+                ValidationPanel.Visibility = Visibility.Visible;
+                ValidationPanel.IsExpanded = vr.HasErrors || vr.HasWarnings;
+                ValidationIssuesList.ItemsSource = vr.Issues.Select(i => new ValidationIssueViewModel(i)).ToList();
+            }
+            else
+            {
+                ValidationPanel.Visibility = Visibility.Collapsed;
+                ValidationIssuesList.ItemsSource = null;
+            }
+        }
+
+        private void ValidationIssue_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBox listBox && listBox.SelectedItem is ValidationIssueViewModel issue)
+            {
+                // Try to navigate to the issue in the hierarchy/inspector
+                if (issue.Path?.StartsWith("Hotspots[") == true && _currentScene != null)
+                {
+                    // Extract hotspot index
+                    var indexStart = "Hotspots[".Length;
+                    var indexEnd = issue.Path.IndexOf(']', indexStart);
+                    if (indexEnd > indexStart && int.TryParse(issue.Path.Substring(indexStart, indexEnd - indexStart), out int index))
+                    {
+                        if (index >= 0 && index < _currentScene.Hotspots.Count)
+                        {
+                            var hotspot = _currentScene.Hotspots[index];
+                            InspectorHost.Content = hotspot;
+                            StatusText.Text = $"Navigated to: {hotspot.Id}";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CtxFixValidationIssues_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentScene == null) return;
+            if (sender is FrameworkElement fe && fe.DataContext is EngineTreeItem ti && ti.Kind == TreeKind.Hotspot && ti.Payload is HotspotDTO hs)
+            {
+                var vr = SceneValidator.Validate(_currentScene);
+                int fixedCount = SceneValidator.AutoFixIssues(_currentScene, vr);
+                
+                if (fixedCount > 0)
+                {
+                    RefreshHierarchyPreserveSelection(hs);
+                    var newVr = SceneValidator.Validate(_currentScene);
+                    _lastValidationResult = newVr;
+                    ShowValidationStatus(newVr, prefix: $"Auto-fixed {fixedCount} issue(s)");
+                    UpdateValidationPanel(newVr);
+                }
+                else
+                {
+                    MessageBox.Show(this, "No auto-fixable issues found for this hotspot.", "Fix Issues", 
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
         }
 
         private void ShowValidationStatus(ValidationResult vr, string prefix)
@@ -396,20 +498,22 @@ namespace Editor
             {
                 StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – {vr.Issues.Count(i => i.Severity == IssueSeverity.Error)} error(s), {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)";
                 StatusText.Foreground = System.Windows.Media.Brushes.OrangeRed;
-
-                // Optional: Detaildialog bei Fehlern
-                var details = string.Join(Environment.NewLine, vr.Issues.Select(i => i.ToString()));
-                MessageBox.Show(this, details, "Validation Errors/Warnings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ValidationStatusText.Text = $"{vr.Issues.Count(i => i.Severity == IssueSeverity.Error)} Error(s)";
+                ValidationStatusText.Foreground = System.Windows.Media.Brushes.OrangeRed;
             }
             else if (vr.HasWarnings)
             {
                 StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – 0 errors, {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)";
                 StatusText.Foreground = System.Windows.Media.Brushes.DarkGoldenrod;
+                ValidationStatusText.Text = $"{vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} Warning(s)";
+                ValidationStatusText.Foreground = System.Windows.Media.Brushes.DarkGoldenrod;
             }
             else
             {
                 StatusText.Text = $"{prefix}: OK";
                 StatusText.Foreground = System.Windows.Media.Brushes.SeaGreen;
+                ValidationStatusText.Text = "OK";
+                ValidationStatusText.Foreground = System.Windows.Media.Brushes.SeaGreen;
             }
         }
 

@@ -129,6 +129,8 @@
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Header="_Validate Scene" Click="ValidateSceneMenu_Click"/>
+                <Separator />
+                <MenuItem Header="Show _Validation Issues" Click="ShowValidationIssuesMenu_Click"/>
             </MenuItem>
         </Menu>
 
@@ -137,7 +139,36 @@
             <StatusBarItem>
                 <TextBlock x:Name="StatusText" Text="Ready." />
             </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Validation: " />
+                    <TextBlock x:Name="ValidationStatusText" Text="N/A" FontWeight="Bold" />
+                </StackPanel>
+            </StatusBarItem>
         </StatusBar>
+
+        <!-- Validation Panel (collapsible) -->
+        <Expander DockPanel.Dock="Bottom" x:Name="ValidationPanel" Header="Validation Issues" IsExpanded="False" Visibility="Collapsed">
+            <Border Background="#2a2a2a" BorderBrush="#333" BorderThickness="0,1,0,0" MaxHeight="150">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="ValidationIssuesList" Background="Transparent" BorderThickness="0" 
+                             MouseDoubleClick="ValidationIssue_DoubleClick">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                    <TextBlock Text="{Binding SeverityIcon}" FontWeight="Bold" Margin="0,0,8,0" />
+                                    <TextBlock Text="{Binding Message}" />
+                                    <TextBlock Text=" (" Opacity="0.6" Margin="4,0,0,0" />
+                                    <TextBlock Text="{Binding Path}" Opacity="0.6" />
+                                    <TextBlock Text=")" Opacity="0.6" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Border>
+        </Expander>
 
         <!-- Hauptbereich -->
         <Grid>
@@ -166,6 +197,10 @@
                                         <MenuItem Header="Delete Hotspot"
                       Visibility="{Binding Kind, Converter={StaticResource KindToVisibility}, ConverterParameter=Hotspot}"
                       Click="CtxDeleteHotspot_Click"/>
+                                        <Separator Visibility="{Binding Kind, Converter={StaticResource KindToVisibility}, ConverterParameter=Hotspot}"/>
+                                        <MenuItem Header="Fix Validation Issues"
+                      Visibility="{Binding Kind, Converter={StaticResource KindToVisibility}, ConverterParameter=Hotspot}"
+                      Click="CtxFixValidationIssues_Click"/>
                                     </ContextMenu>
                                 </StackPanel.ContextMenu>
                                 <TextBlock Text="{Binding Name}" />

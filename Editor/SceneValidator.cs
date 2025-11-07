@@ -58,5 +58,95 @@ namespace Editor
 
             return vr;
         }
+
+        /// <summary>
+        /// Versucht automatisch behebbare Probleme zu fixen
+        /// </summary>
+        public static int AutoFixIssues(SceneDTO scene, ValidationResult validationResult)
+        {
+            int fixedCount = 0;
+
+            // Fix Hotspot IDs
+            for (int i = 0; i < scene.Hotspots.Count; i++)
+            {
+                var hs = scene.Hotspots[i];
+                string basePath = $"Hotspots[{i}]";
+
+                // Fix empty IDs
+                if (string.IsNullOrWhiteSpace(hs.Id))
+                {
+                    hs.Id = GenerateUniqueHotspotId(scene, $"hotspot_{i}");
+                    fixedCount++;
+                }
+
+                // Fix empty LabelKey
+                if (string.IsNullOrWhiteSpace(hs.LabelKey) &&
+                    validationResult.Issues.Any(issue => issue.Path == $"{basePath}.LabelKey"))
+                {
+                    hs.LabelKey = hs.Id;
+                    fixedCount++;
+                }
+
+                // Fix null Rect
+                if (hs.Rect == null)
+                {
+                    hs.Rect = new Engine.Common.RectF { X = 64, Y = 64, Width = 160, Height = 80 };
+                    fixedCount++;
+                }
+                else
+                {
+                    // Fix invalid dimensions
+                    if (hs.Rect.Width <= 0)
+                    {
+                        hs.Rect.Width = 160;
+                        fixedCount++;
+                    }
+                    if (hs.Rect.Height <= 0)
+                    {
+                        hs.Rect.Height = 80;
+                        fixedCount++;
+                    }
+                    // Fix negative positions (set to 0)
+                    if (hs.Rect.X < 0)
+                    {
+                        hs.Rect.X = 0;
+                        fixedCount++;
+                    }
+                    if (hs.Rect.Y < 0)
+                    {
+                        hs.Rect.Y = 0;
+                        fixedCount++;
+                    }
+                }
+            }
+
+            // Fix duplicate IDs
+            var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < scene.Hotspots.Count; i++)
+            {
+                var hs = scene.Hotspots[i];
+                if (!seenIds.Add(hs.Id))
+                {
+                    hs.Id = GenerateUniqueHotspotId(scene, hs.Id);
+                    fixedCount++;
+                }
+            }
+
+            return fixedCount;
+        }
+
+        /// <summary>
+        /// Generiert eine eindeutige Hotspot-ID
+        /// </summary>
+        private static string GenerateUniqueHotspotId(SceneDTO scene, string baseId)
+        {
+            if (!scene.Hotspots.Any(h => h.Id.Equals(baseId, StringComparison.OrdinalIgnoreCase)))
+                return baseId;
+
+            int n = 1;
+            while (scene.Hotspots.Any(h => h.Id.Equals($"{baseId}_{n}", StringComparison.OrdinalIgnoreCase)))
+                n++;
+            return $"{baseId}_{n}";
+        }
     }
 }
