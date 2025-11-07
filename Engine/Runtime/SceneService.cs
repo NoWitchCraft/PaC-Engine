@@ -21,13 +21,26 @@ namespace Engine.Runtime
         public void LoadFromContent(string relativeScenePath)
         {
             var log = ServiceRegistry.Get<ILogger>();
-            var scene = SceneIO.LoadFromContent(relativeScenePath);
-            LoadFromDTO(scene);
-            log.Info(nameof(SceneService), $"Scene loaded: {Current?.Id} from {relativeScenePath}");
+            
+            try
+            {
+                log.Info(nameof(SceneService), $"Loading scene from: {relativeScenePath}");
+                var scene = SceneIO.LoadFromContent(relativeScenePath);
+                LoadFromDTO(scene);
+                log.Info(nameof(SceneService), $"Scene loaded successfully: {Current?.Id}");
+            }
+            catch (Exception ex)
+            {
+                log.Error(nameof(SceneService), $"Failed to load scene '{relativeScenePath}': {ex.Message}");
+                throw;
+            }
         }
 
         public void LoadFromDTO(SceneDTO dto)
         {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+                
             Current = SceneRuntimeMapper.FromDTO(dto);
         }
 
