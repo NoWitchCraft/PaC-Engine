@@ -14,4 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Windows.Forms" Version="8.0.0" />
+  </ItemGroup>
 </Project>

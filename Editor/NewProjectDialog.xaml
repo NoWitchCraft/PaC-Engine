@@ -1,0 +1,100 @@
+<Window x:Class="Editor.NewProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create New Project" Height="300" Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="#2a2a2a"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#555"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#2a2a2a"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#555"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Background="#1e1e1e">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#252525" BorderBrush="#333" 
+                BorderThickness="0,0,0,1" Padding="20">
+            <StackPanel>
+                <TextBlock Text="Create New Game Project" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="Enter project details and choose a location" 
+                           FontSize="12" Foreground="#aaa" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <StackPanel Grid.Row="1" Margin="20" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Project Name -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Project Name:" Margin="0,0,0,15"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
+                         x:Name="ProjectNameTextBox" 
+                         Margin="0,0,0,15"
+                         Text="MyGame"
+                         TextChanged="ProjectNameTextBox_TextChanged"/>
+
+                <!-- Project Location -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Location:"/>
+                <TextBox Grid.Row="1" Grid.Column="1" 
+                         x:Name="ProjectLocationTextBox" 
+                         IsReadOnly="True"
+                         Margin="0,0,5,0"/>
+                <Button Grid.Row="1" Grid.Column="2" 
+                        Content="Browse..." 
+                        Click="Browse_Click"
+                        MinWidth="80"/>
+            </Grid>
+
+            <Border Background="#2a2a2a" BorderBrush="#555" BorderThickness="1" 
+                    Padding="15" Margin="0,20,0,0">
+                <StackPanel>
+                    <TextBlock Text="Full Project Path:" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="FullPathTextBlock" 
+                               Text="(Select a location)" 
+                               Foreground="#aaa" 
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Footer Buttons -->
+        <Border Grid.Row="2" Background="#252525" BorderBrush="#333" 
+                BorderThickness="0,1,0,0" Padding="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Create" Click="Create_Click" IsEnabled="False" 
+                        x:Name="CreateButton" MinWidth="80"/>
+                <Button Content="Cancel" Click="Cancel_Click" MinWidth="80"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
