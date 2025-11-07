@@ -4,7 +4,8 @@
         xmlns:local="clr-namespace:Editor"
         xmlns:scene="clr-namespace:Engine.Data.Scene;assembly=Engine"
         xmlns:common="clr-namespace:Engine.Common;assembly=Engine"
-        Title="PaCEngine Editor" Height="720" Width="1280">
+        Title="PaCEngine Editor" Height="720" Width="1280"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
 
         <local:KindEqualsToVisibilityConverter x:Key="KindToVisibility"/>
@@ -128,7 +129,7 @@
                 <MenuItem Header="Add _Hotspot" Click="AddHotspotMenu_Click" />
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Validate Scene" Click="ValidateSceneMenu_Click"/>
+                <MenuItem Header="_Validate Scene" Click="ValidateSceneMenu_Click" InputGestureText="F5"/>
                 <Separator />
                 <MenuItem Header="Show _Validation Issues" Click="ShowValidationIssuesMenu_Click"/>
             </MenuItem>

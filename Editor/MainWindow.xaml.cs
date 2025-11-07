@@ -29,12 +29,22 @@ namespace Editor
             public TreeKind Kind {  get; set; }
             public object? Payload { get; set; }
             public List<EngineTreeItem> Children { get; set; } = new();
+            public bool HasValidationIssues { get; set; }
             public override string ToString() => Name;
         }
 
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5)
+            {
+                ValidateSceneMenu_Click(sender, e);
+                e.Handled = true;
+            }
         }
 
         private string GenerateUniqueHotspotId(SceneDTO scene)
@@ -220,11 +230,24 @@ namespace Editor
         private void SceneId_LostFocus(object sender, RoutedEventArgs e)
         {
             RefreshHierarchyPreserveSelection(_currentScene);
+            TriggerAutoValidation();
         }
 
         private void HotspotId_LostFocus(object sender, RoutedEventArgs e)
         {
             RefreshHierarchyPreserveSelection(InspectorHost.Content);
+            TriggerAutoValidation();
+        }
+
+        private void TriggerAutoValidation()
+        {
+            if (_currentScene == null) return;
+            
+            var vr = SceneValidator.Validate(_currentScene);
+            _lastValidationResult = vr;
+            ShowValidationStatus(vr, prefix: "Auto-validated");
+            UpdateValidationPanel(vr);
+        }
         }
 
         private void OpenSceneMenu_Click(object sender, RoutedEventArgs e)
@@ -284,11 +307,28 @@ namespace Editor
 
         private void BuildHierarchy(SceneDTO scene)
         {
+            // Validate scene to check for issues
+            var vr = _lastValidationResult ?? SceneValidator.Validate(scene);
+            
             var root = new EngineTreeItem { Name = $"Scene: {scene.Id}", Kind = TreeKind.Scene, Payload = scene };
+            root.HasValidationIssues = vr.Issues.Any(i => i.Path?.StartsWith("Scene.") == true);
 
             var hsGroup = new EngineTreeItem { Name = $"Hotspots ({scene.Hotspots.Count})", Kind = TreeKind.HotspotGroup };
-            foreach (var hs in scene.Hotspots)
-                hsGroup.Children.Add(new EngineTreeItem { Name = $"Hotspot: {hs.Id}", Kind = TreeKind.Hotspot, Payload = hs });
+            
+            for (int i = 0; i < scene.Hotspots.Count; i++)
+            {
+                var hs = scene.Hotspots[i];
+                var hasIssues = vr.Issues.Any(issue => issue.Path?.StartsWith($"Hotspots[{i}]") == true);
+                var icon = hasIssues ? "⚠️ " : "";
+                hsGroup.Children.Add(new EngineTreeItem 
+                { 
+                    Name = $"{icon}Hotspot: {hs.Id}", 
+                    Kind = TreeKind.Hotspot, 
+                    Payload = hs,
+                    HasValidationIssues = hasIssues
+                });
+            }
+            
             root.Children.Add(hsGroup);
 
             var entGroup = new EngineTreeItem { Name = "Sprites/Entities (0)", Kind = TreeKind.EntitiesGroup };

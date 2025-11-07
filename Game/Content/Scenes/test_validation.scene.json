@@ -1,0 +1,65 @@
+{
+  "id": "test_validation_scene",
+  "backgroundPath": "test_bg.png",
+  "startPosition": {
+    "x": 100,
+    "y": 100
+  },
+  "walkPath": null,
+  "hotspots": [
+    {
+      "id": "valid_hotspot",
+      "labelKey": "valid_hotspot",
+      "rect": {
+        "x": 100,
+        "y": 100,
+        "width": 200,
+        "height": 150
+      },
+      "eventPathId": null,
+      "cursorId": null,
+      "highlight": true
+    },
+    {
+      "id": "",
+      "labelKey": "",
+      "rect": {
+        "x": 300,
+        "y": 200,
+        "width": 0,
+        "height": -10
+      },
+      "eventPathId": null,
+      "cursorId": null,
+      "highlight": false
+    },
+    {
+      "id": "duplicate_id",
+      "labelKey": "duplicate_id",
+      "rect": {
+        "x": -50,
+        "y": -20,
+        "width": 100,
+        "height": 80
+      },
+      "eventPathId": null,
+      "cursorId": null,
+      "highlight": true
+    },
+    {
+      "id": "duplicate_id",
+      "labelKey": "Another duplicate",
+      "rect": {
+        "x": 500,
+        "y": 400,
+        "width": 120,
+        "height": 90
+      },
+      "eventPathId": null,
+      "cursorId": null,
+      "highlight": true
+    }
+  ],
+  "musicCueId": null,
+  "ambientCueIds": []
+}
