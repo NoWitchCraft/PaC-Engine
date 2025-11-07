@@ -45,6 +45,8 @@
 - [x] Hierarchie + Inspector
 - [x] Kontext-Menüs Add / Delete
 - [x] Scene-Validation (IDs, Bounds, fehlende Referenzen)
+- [x] Auto-Fix für häufige Validierungsfehler
+- [x] Status-Feedback für Validierungsergebnisse
 - [ ] Asset-Browser (ContentRoot durchsuchen)
 - [ ] Auto-Reload bei Dateiänderungen
 - [ ] Multi-Projekt-Support (Engine-Version + Game-Pfad getrennt)
@@ -116,7 +118,7 @@
 ---
 
 ## 🧩 NÄCHSTE SCHRITTE (nach aktuellem Stand)
-1. 🔲 Scene-Validation & Status-Feedback (SC2.3)  
+1. ✅ Scene-Validation & Status-Feedback (SC2.3) **[COMPLETED]**
 2. 🔲 Viewport-System (SC3)  
 3. 🔲 Editor-Start-Hub / Game-Projekt-Anlage (SC4)  
 4. 🔲 Logging & Debug-System (für Engine & Editor gemeinsam)  
