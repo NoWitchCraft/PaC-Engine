@@ -4,7 +4,8 @@
         xmlns:local="clr-namespace:Editor"
         xmlns:scene="clr-namespace:Engine.Data.Scene;assembly=Engine"
         xmlns:common="clr-namespace:Engine.Common;assembly=Engine"
-        Title="PaCEngine Editor" Height="720" Width="1280">
+        Title="PaCEngine Editor" Height="720" Width="1280"
+        KeyDown="Window_KeyDown">
     <Window.Resources>
 
         <local:KindEqualsToVisibilityConverter x:Key="KindToVisibility"/>
@@ -127,6 +128,13 @@
             <MenuItem Header="_Scene">
                 <MenuItem Header="Add _Hotspot" Click="AddHotspotMenu_Click" />
             </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Zoom In" InputGestureText="+"/>
+                <MenuItem Header="Zoom Out" InputGestureText="-"/>
+                <MenuItem Header="Reset View" InputGestureText="Ctrl+0"/>
+                <Separator />
+                <MenuItem Header="Toggle Grid Snap" InputGestureText="Ctrl+G"/>
+            </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Header="_Validate Scene" Click="ValidateSceneMenu_Click"/>
             </MenuItem>
@@ -175,10 +183,10 @@
                 </TreeView>
             </Border>
 
-            <!-- Center: Platzhalter für Viewport (später) -->
-            <Grid Grid.Column="1">
-                <TextBlock Text="Viewport (coming soon…)" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.4"/>
-            </Grid>
+            <!-- Center: Viewport -->
+            <Border Grid.Column="1" BorderBrush="#333" BorderThickness="0,0,1,0">
+                <local:ViewportControl x:Name="Viewport" />
+            </Border>
 
             <!-- Inspector (rechts) -->
             <Border Grid.Column="2" BorderBrush="#333" BorderThickness="1,0,0,0">

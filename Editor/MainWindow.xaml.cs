@@ -34,6 +34,21 @@ namespace Editor
         public MainWindow()
         {
             InitializeComponent();
+            Viewport.HotspotSelected += Viewport_HotspotSelected;
+        }
+
+        private void Viewport_HotspotSelected(object? sender, HotspotDTO? hotspot)
+        {
+            if (hotspot != null)
+            {
+                InspectorHost.Content = hotspot;
+                RefreshHierarchyPreserveSelection(hotspot);
+            }
+            else if (_currentScene != null)
+            {
+                InspectorHost.Content = _currentScene;
+                RefreshHierarchyPreserveSelection(_currentScene);
+            }
         }
 
         private string GenerateUniqueHotspotId(SceneDTO scene)
@@ -64,6 +79,8 @@ namespace Editor
                 _currentScene.Hotspots.Add(hs);
                 RefreshHierarchyPreserveSelection(hs);
                 InspectorHost.Content = hs;
+                Viewport.RefreshHotspots();
+                Viewport.SetSelectedHotspot(hs);
                 StatusText.Text = $"Hotspot added: {hs.Id}";
             }
         }
@@ -92,6 +109,8 @@ namespace Editor
                 _currentScene.Hotspots.Remove(hs);
                 InspectorHost.Content = _currentScene;
                 RefreshHierarchyPreserveSelection(_currentScene);
+                Viewport.RefreshHotspots();
+                Viewport.SetSelectedHotspot(null);
                 StatusText.Text = $"Hotspot deleted: {hs.Id}";
             }
         }
@@ -121,6 +140,8 @@ namespace Editor
             // Tree aktualisieren & direkt den neuen Hotspot im Inspector auswählen
             RefreshHierarchyPreserveSelection(hs);
             InspectorHost.Content = hs;
+            Viewport.RefreshHotspots();
+            Viewport.SetSelectedHotspot(hs);
             StatusText.Text = $"Hotspot added: {hs.Id}";
         }
 
@@ -145,6 +166,8 @@ namespace Editor
                 // Inspector zurück auf Scene, Tree refreshen
                 InspectorHost.Content = _currentScene;
                 RefreshHierarchyPreserveSelection(_currentScene);
+                Viewport.RefreshHotspots();
+                Viewport.SetSelectedHotspot(null);
                 StatusText.Text = $"Hotspot deleted: {hs.Id}";
             }
         }
@@ -264,6 +287,11 @@ namespace Editor
                 BuildHierarchy(scene);
                 // Inspector zeigt zunächst die Scene selbst
                 InspectorHost.Content = scene;
+                
+                // Set scene in viewport
+                var projectBasePath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Game");
+                Viewport.SetScene(scene, Path.GetFullPath(projectBasePath));
+                
                 var vr = SceneValidator.Validate(scene);
                 ShowValidationStatus(vr, prefix: "Loaded");
             }
@@ -297,7 +325,19 @@ namespace Editor
         private void HierarchyTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (e.NewValue is EngineTreeItem ti)
+            {
                 InspectorHost.Content = ti.Payload ?? _currentScene;
+                
+                // Sync selection with viewport
+                if (ti.Payload is HotspotDTO hotspot)
+                {
+                    Viewport.SetSelectedHotspot(hotspot);
+                }
+                else
+                {
+                    Viewport.SetSelectedHotspot(null);
+                }
+            }
         }
 
         private void SaveSceneMenu_Click(object sender, RoutedEventArgs e)
@@ -417,6 +457,15 @@ namespace Editor
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                SaveSceneMenu_Click(sender, e);
+                e.Handled = true;
+            }
         }
     }
 
