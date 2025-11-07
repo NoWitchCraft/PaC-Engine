@@ -50,10 +50,10 @@
 - [ ] Multi-Projekt-Support (Engine-Version + Game-Pfad getrennt)
 
 ### 3. Visual Editing (Viewport)
-- [ ] Background-Render + Zoom / Pan
-- [ ] Hotspot-Rects zeichnen, verschieben, resizen
-- [ ] Auswahl-Sync: Klick im Viewport ↔ Inspector
-- [ ] Snap-to-Grid / Pixelmaßstab
+- [x] Background-Render + Zoom / Pan
+- [x] Hotspot-Rects zeichnen, verschieben, resizen
+- [x] Auswahl-Sync: Klick im Viewport ↔ Inspector
+- [x] Snap-to-Grid / Pixelmaßstab
 - [ ] Scene-Preview-Mode („Test Run“ im Editor)
 
 ### 4. Erweiterbare Panels
@@ -117,7 +117,7 @@
 
 ## 🧩 NÄCHSTE SCHRITTE (nach aktuellem Stand)
 1. 🔲 Scene-Validation & Status-Feedback (SC2.3)  
-2. 🔲 Viewport-System (SC3)  
+2. ✅ Viewport-System (SC3)  
 3. 🔲 Editor-Start-Hub / Game-Projekt-Anlage (SC4)  
 4. 🔲 Logging & Debug-System (für Engine & Editor gemeinsam)  
 5. 🔲 Erste Engine-Runtime: Scene-Load & Render-Loop  
