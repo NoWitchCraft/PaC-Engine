@@ -26,6 +26,14 @@ namespace Engine.Core
             return false;
         }
 
+        /// <summary>
+        /// Versucht einen Service zu holen, gibt null zurück falls nicht registriert
+        /// </summary>
+        public static T? TryGet<T>() where T : class
+        {
+            return TryGet<T>(out var instance) ? instance : null;
+        }
+
         public static T Get<T>() where T : class
         {
             if (TryGet<T>(out var inst) && inst != null) return inst;
