@@ -119,15 +119,7 @@ namespace Editor
                 var settingsPath = Path.Combine(fullPath, "settings.json");
                 if (!File.Exists(settingsPath))
                 {
-                    var defaultSettings = @"{
-  ""ContentRoot"": ""Content"",
-  ""StartSceneId"": """",
-  ""WindowWidth"": 1280,
-  ""WindowHeight"": 720,
-  ""Language"": ""de-DE"",
-  ""MasterVolume"": 1.0
-}";
-                    File.WriteAllText(settingsPath, defaultSettings);
+                    ProjectHelper.CreateDefaultSettings(settingsPath);
                 }
 
                 // Create a README file

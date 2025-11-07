@@ -39,8 +39,19 @@ namespace Editor
                 var projects = JsonSerializer.Deserialize<List<ProjectInfo>>(json, opts);
                 return projects ?? new List<ProjectInfo>();
             }
-            catch
+            catch (JsonException)
             {
+                // If JSON is corrupted, return empty list and file will be overwritten on next save
+                return new List<ProjectInfo>();
+            }
+            catch (IOException)
+            {
+                // If file can't be read, return empty list
+                return new List<ProjectInfo>();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // If access is denied, return empty list
                 return new List<ProjectInfo>();
             }
         }
@@ -70,9 +81,17 @@ namespace Editor
                 var json = JsonSerializer.Serialize(toSave, opts);
                 File.WriteAllText(RecentProjectsFile, json);
             }
-            catch
+            catch (JsonException)
             {
-                // Silently fail if we can't save recent projects
+                // Silently fail if serialization fails
+            }
+            catch (IOException)
+            {
+                // Silently fail if we can't write the file
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Silently fail if access is denied
             }
         }
 
