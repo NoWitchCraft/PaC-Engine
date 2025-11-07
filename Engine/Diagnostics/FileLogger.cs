@@ -45,9 +45,13 @@ namespace Engine.Diagnostics
                 {
                     File.AppendAllText(_filePath, line + Environment.NewLine, Encoding.UTF8);
                 }
-                catch
+                catch (IOException)
                 {
-                    // Suppress file write errors to avoid disrupting application
+                    // Suppress IO exceptions (file locked, disk full, etc.) to avoid disrupting application
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Suppress access denied errors to avoid disrupting application
                 }
             }
         }

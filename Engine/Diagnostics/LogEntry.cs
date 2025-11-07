@@ -15,7 +15,7 @@ namespace Engine.Diagnostics
 
         public LogEntry(LogLevel level, string source, string message, int threadId)
         {
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.UtcNow;
             Level = level;
             Source = source ?? "-";
             Message = message ?? "";

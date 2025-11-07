@@ -27,7 +27,7 @@ namespace Game
             
             // Add file logger
             var logDir = System.IO.Path.Combine(System.AppContext.BaseDirectory, "Logs");
-            var logFile = System.IO.Path.Combine(logDir, $"game_{System.DateTime.Now:yyyyMMdd_HHmmss}.log");
+            var logFile = System.IO.Path.Combine(logDir, $"game_{System.DateTime.UtcNow:yyyyMMdd_HHmmss}.log");
             var fileLogger = new FileLogger(logFile, LogLevel.Debug);
             multiLogger.AddLogger(fileLogger);
             

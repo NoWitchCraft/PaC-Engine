@@ -51,9 +51,10 @@ namespace Engine.Diagnostics
                 {
                     logger.Log(level, source, message);
                 }
-                catch
+                catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
                 {
-                    // Suppress errors from individual loggers to avoid disrupting application
+                    // Suppress expected exceptions from individual loggers to avoid disrupting application
+                    // Common exceptions: ArgumentException (invalid arguments), InvalidOperationException (logger state)
                 }
             }
         }
