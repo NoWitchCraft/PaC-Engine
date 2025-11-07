@@ -19,6 +19,8 @@ namespace Editor
         private string? _currentScenePath;
 
         private HashSet<string> _expandedNames = new();
+        
+        private LogPanel? _logPanel;
 
         private enum TreeKind { Scene, HotspotGroup, Hotspot, EntitiesGroup }
 
@@ -34,6 +36,7 @@ namespace Editor
         public MainWindow()
         {
             InitializeComponent();
+            Engine.Diagnostics.Log.Info("MainWindow", "Editor window initialized");
         }
 
         private string GenerateUniqueHotspotId(SceneDTO scene)
@@ -65,6 +68,7 @@ namespace Editor
                 RefreshHierarchyPreserveSelection(hs);
                 InspectorHost.Content = hs;
                 StatusText.Text = $"Hotspot added: {hs.Id}";
+                Engine.Diagnostics.Log.Info("MainWindow", $"Added hotspot: {hs.Id}");
             }
         }
 
@@ -93,6 +97,7 @@ namespace Editor
                 InspectorHost.Content = _currentScene;
                 RefreshHierarchyPreserveSelection(_currentScene);
                 StatusText.Text = $"Hotspot deleted: {hs.Id}";
+                Engine.Diagnostics.Log.Info("MainWindow", $"Deleted hotspot: {hs.Id}");
             }
         }
 
@@ -261,6 +266,8 @@ namespace Editor
                 Title = $"PaCEngine Editor – {scene.Id}";
                 StatusText.Text = $"Loaded: {scene.Id} | BG={scene.BackgroundPath} | Hotspots={scene.Hotspots.Count}";
 
+                Engine.Diagnostics.Log.Info("MainWindow", $"Loaded scene: {scene.Id} from {absolutePath}");
+                
                 BuildHierarchy(scene);
                 // Inspector zeigt zunächst die Scene selbst
                 InspectorHost.Content = scene;
@@ -269,6 +276,7 @@ namespace Editor
             }
             catch (Exception ex)
             {
+                Engine.Diagnostics.Log.Error("MainWindow", $"Failed to load scene from {absolutePath}: {ex.Message}");
                 MessageBox.Show(this,
                     $"Could not load scene:\n{ex.Message}",
                     "Load Error",
@@ -365,9 +373,11 @@ namespace Editor
 
                 Title = $"PaCEngine Editor – {_currentScene!.Id}";
                 StatusText.Text = $"Saved: {_currentScene.Id} → {absolutePath}";
+                Engine.Diagnostics.Log.Info("MainWindow", $"Saved scene: {_currentScene.Id} to {absolutePath}");
             }
             catch (Exception ex)
             {
+                Engine.Diagnostics.Log.Error("MainWindow", $"Failed to save scene to {absolutePath}: {ex.Message}");
                 MessageBox.Show(this,
                     $"Could not save scene:\n{ex.Message}",
                     "Save Error",
@@ -417,6 +427,25 @@ namespace Editor
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void LogViewerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.EventLogger == null)
+            {
+                MessageBox.Show(this, "Event logger is not initialized.", "Log Viewer", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (_logPanel == null || !_logPanel.IsLoaded)
+            {
+                _logPanel = new LogPanel(App.EventLogger);
+                _logPanel.Owner = this;
+            }
+
+            _logPanel.Show();
+            _logPanel.Activate();
         }
     }
 

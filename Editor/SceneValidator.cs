@@ -10,6 +10,8 @@ namespace Editor
     {
         public static ValidationResult Validate(SceneDTO scene)
         {
+            Log.Debug(nameof(SceneValidator), $"Validating scene: {scene?.Id ?? "<null>"}");
+            
             var vr = new ValidationResult();
 
             // Scene-Basics
@@ -55,6 +57,13 @@ namespace Editor
                     vr.Add(IssueSeverity.Warning, "HS_LABEL_EMPTY", "LabelKey ist leer (nur Hinweis).", $"{basePath}.LabelKey");
 
             }
+
+            if (vr.HasErrors)
+                Log.Warn(nameof(SceneValidator), $"Scene validation completed with {vr.Issues.Count(i => i.Severity == IssueSeverity.Error)} error(s) and {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)");
+            else if (vr.HasWarnings)
+                Log.Info(nameof(SceneValidator), $"Scene validation completed with {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)");
+            else
+                Log.Info(nameof(SceneValidator), "Scene validation completed successfully");
 
             return vr;
         }
