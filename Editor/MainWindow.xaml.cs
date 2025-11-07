@@ -489,23 +489,37 @@ namespace Editor
         {
             if (sender is ListBox listBox && listBox.SelectedItem is ValidationIssueViewModel issue)
             {
-                // Try to navigate to the issue in the hierarchy/inspector
-                if (issue.Path?.StartsWith("Hotspots[") == true && _currentScene != null)
+                NavigateToValidationIssue(issue);
+            }
+        }
+
+        private void NavigateToValidationIssue(ValidationIssueViewModel issue)
+        {
+            // Try to navigate to the issue in the hierarchy/inspector
+            if (issue.Path?.StartsWith("Hotspots[") == true && _currentScene != null)
+            {
+                int? hotspotIndex = ExtractHotspotIndexFromPath(issue.Path);
+                if (hotspotIndex.HasValue && hotspotIndex.Value >= 0 && hotspotIndex.Value < _currentScene.Hotspots.Count)
                 {
-                    // Extract hotspot index
-                    var indexStart = "Hotspots[".Length;
-                    var indexEnd = issue.Path.IndexOf(']', indexStart);
-                    if (indexEnd > indexStart && int.TryParse(issue.Path.Substring(indexStart, indexEnd - indexStart), out int index))
-                    {
-                        if (index >= 0 && index < _currentScene.Hotspots.Count)
-                        {
-                            var hotspot = _currentScene.Hotspots[index];
-                            InspectorHost.Content = hotspot;
-                            StatusText.Text = $"Navigated to: {hotspot.Id}";
-                        }
-                    }
+                    var hotspot = _currentScene.Hotspots[hotspotIndex.Value];
+                    InspectorHost.Content = hotspot;
+                    StatusText.Text = $"Navigated to: {hotspot.Id}";
                 }
             }
+        }
+
+        private int? ExtractHotspotIndexFromPath(string path)
+        {
+            const string prefix = "Hotspots[";
+            var indexStart = prefix.Length;
+            var indexEnd = path.IndexOf(']', indexStart);
+            
+            if (indexEnd > indexStart && int.TryParse(path.Substring(indexStart, indexEnd - indexStart), out int index))
+            {
+                return index;
+            }
+            
+            return null;
         }
 
         private void CtxFixValidationIssues_Click(object sender, RoutedEventArgs e)
@@ -534,18 +548,21 @@ namespace Editor
 
         private void ShowValidationStatus(ValidationResult vr, string prefix)
         {
+            int errorCount = vr.Issues.Count(i => i.Severity == IssueSeverity.Error);
+            int warningCount = vr.Issues.Count(i => i.Severity == IssueSeverity.Warning);
+            
             if (vr.HasErrors)
             {
-                StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – {vr.Issues.Count(i => i.Severity == IssueSeverity.Error)} error(s), {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)";
+                StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – {errorCount} error(s), {warningCount} warning(s)";
                 StatusText.Foreground = System.Windows.Media.Brushes.OrangeRed;
-                ValidationStatusText.Text = $"{vr.Issues.Count(i => i.Severity == IssueSeverity.Error)} Error(s)";
+                ValidationStatusText.Text = $"{errorCount} Error(s)";
                 ValidationStatusText.Foreground = System.Windows.Media.Brushes.OrangeRed;
             }
             else if (vr.HasWarnings)
             {
-                StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – 0 errors, {vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} warning(s)";
+                StatusText.Text = $"{prefix}: {vr.Issues.Count} issues – 0 errors, {warningCount} warning(s)";
                 StatusText.Foreground = System.Windows.Media.Brushes.DarkGoldenrod;
-                ValidationStatusText.Text = $"{vr.Issues.Count(i => i.Severity == IssueSeverity.Warning)} Warning(s)";
+                ValidationStatusText.Text = $"{warningCount} Warning(s)";
                 ValidationStatusText.Foreground = System.Windows.Media.Brushes.DarkGoldenrod;
             }
             else
