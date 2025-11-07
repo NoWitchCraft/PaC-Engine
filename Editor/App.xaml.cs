@@ -54,6 +54,10 @@ namespace Editor
                 
                 // Add file logger
                 var logDir = Path.Combine(AppContext.BaseDirectory, "Logs");
+                if (!Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
                 var logFile = Path.Combine(logDir, $"editor_{DateTime.UtcNow:yyyyMMdd_HHmmss}.log");
                 var fileLogger = new FileLogger(logFile, LogLevel.Debug);
                 multiLogger.AddLogger(fileLogger);

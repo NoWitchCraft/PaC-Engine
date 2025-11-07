@@ -129,6 +129,8 @@
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Header="_Validate Scene" Click="ValidateSceneMenu_Click"/>
+                <Separator />
+                <MenuItem Header="_Log Viewer..." Click="LogViewerMenu_Click"/>
             </MenuItem>
         </Menu>
 
