@@ -5,6 +5,7 @@ using Engine.IO;
 using Engine.Content;
 using Engine.Resources;
 using Engine.Runtime;
+using Engine.Input;
 
 namespace Game
 {
@@ -16,63 +17,55 @@ namespace Game
         public void Initialize()
         {
             Settings.Load();
-
             ServiceRegistry.Clear();
 
-            // Create MultiLogger with Console and File loggers
-            var multiLogger = new MultiLogger(LogLevel.Debug);
-            
-            var consoleLogger = new ConsoleLogger(LogLevel.Debug);
-            multiLogger.AddLogger(consoleLogger);
-            
-            // Add file logger
+            // Logger: Console + File via MultiLogger
+            var multi = new MultiLogger(LogLevel.Debug);
+            multi.AddLogger(new ConsoleLogger(LogLevel.Debug));
+
             var logDir = System.IO.Path.Combine(System.AppContext.BaseDirectory, "Logs");
             var logFile = System.IO.Path.Combine(logDir, $"game_{System.DateTime.UtcNow:yyyyMMdd_HHmmss}.log");
-            var fileLogger = new FileLogger(logFile, LogLevel.Debug);
-            multiLogger.AddLogger(fileLogger);
-            
-            ServiceRegistry.Register<ILogger>(multiLogger);
-            Log.Use(multiLogger);
+            multi.AddLogger(new FileLogger(logFile, LogLevel.Debug));
 
+            ServiceRegistry.Register<ILogger>(multi);
+            Log.Use(multi);
+
+            // IO + Content
             var fs = new FileSystem();
             ServiceRegistry.Register<IFileSystem>(fs);
 
             var resolver = new ContentResolver(fs, Settings.Current.ContentRoot);
             ServiceRegistry.Register<IContentResolver>(resolver);
 
-            var rm = new ResourceManager(resolver, fs, multiLogger);
+            // ResourceManager (Default-Loader später um Texture ergänzen)
+            var rm = new ResourceManager(resolver, fs, multi);
             rm.RegisterDefaultLoaders();
             ServiceRegistry.Register<IResourceManager>(rm);
 
-            // SceneService + EventRunner registrieren
+            // Scene + Events + Input
             _scenes = new SceneService();
             ServiceRegistry.Register<ISceneService>(_scenes);
 
             _events = new LogEventRunner();
             ServiceRegistry.Register<IEventRunner>(_events);
 
-            // Startszene laden (falls leer: fallback auf example)
+            IInputService input = new RaylibInputService();
+            ServiceRegistry.Register<IInputService>(input);
+
+            // Startszene laden
             var start = string.IsNullOrWhiteSpace(Settings.Current.StartSceneId)
-                        ? "Scenes/first.scene.json"
-                        : Settings.Current.StartSceneId; // hier interpretieren wir StartSceneId als Pfad
+                ? "Scenes/first.scene.json"
+                : Settings.Current.StartSceneId;
 
             _scenes.LoadFromContent(start);
 
-            // Mini-Probe: HitTest bei (x,y) — passe Koordinaten an deine Testszene an
-            var probe = _scenes.HitTest(900, 520);
-            if (probe != null)
-            {
-                Log.Info(nameof(GameApp), $"Hit hotspot: {probe.Id}");
-                if (!string.IsNullOrWhiteSpace(probe.EventPathId))
-                    _events.Trigger(probe.EventPathId!);
-            }
-            else
-            {
-                Log.Info(nameof(GameApp), "No hotspot hit at (900,520).");
-            }
+            Log.Info(nameof(GameApp), $"Initialized. StartScene = {start}");
         }
 
-        public void Update(float dt) { }
+        public void Update(float dt)
+        {
+            // Game-Logik pro Fixed-Step (noch leer)
+        }
 
         public void Shutdown()
         {
