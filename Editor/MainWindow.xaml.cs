@@ -1,4 +1,6 @@
-﻿using Engine.Data.Scene;
+﻿using Engine.Content;
+using Engine.Core;
+using Engine.Data.Scene;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -237,10 +239,16 @@ namespace Editor
 
             try
             {
-                var guess = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Game", "Content", "Scenes");
-                var full = Path.GetFullPath(guess);
-                if (Directory.Exists(full))
-                    dlg.InitialDirectory = full;
+                // Try to use the content resolver to get the Scenes directory
+                var resolver = ServiceRegistry.Get<IContentResolver>();
+                if (resolver != null)
+                {
+                    var scenesPath = Path.Combine(resolver.ContentRootAbsolute, "Scenes");
+                    if (Directory.Exists(scenesPath))
+                    {
+                        dlg.InitialDirectory = scenesPath;
+                    }
+                }
             }
             catch { /* ignore */ }
 
@@ -335,12 +343,26 @@ namespace Editor
 
             try
             {
-                var guess = !string.IsNullOrWhiteSpace(_currentScenePath)
-                            ? Path.GetDirectoryName(_currentScenePath)!
-                            : Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Game", "Content", "Scenes");
-                var full = Path.GetFullPath(guess);
-                if (Directory.Exists(full))
-                    dlg.InitialDirectory = full;
+                string? initialDir = null;
+                
+                if (!string.IsNullOrWhiteSpace(_currentScenePath))
+                {
+                    initialDir = Path.GetDirectoryName(_currentScenePath);
+                }
+                else
+                {
+                    // Try to use the content resolver to get the Scenes directory
+                    var resolver = ServiceRegistry.Get<IContentResolver>();
+                    if (resolver != null)
+                    {
+                        initialDir = Path.Combine(resolver.ContentRootAbsolute, "Scenes");
+                    }
+                }
+                
+                if (initialDir != null && Directory.Exists(initialDir))
+                {
+                    dlg.InitialDirectory = initialDir;
+                }
             }
             catch { /* ignore */ }
 

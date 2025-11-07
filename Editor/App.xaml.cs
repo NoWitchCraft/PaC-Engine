@@ -51,9 +51,9 @@ namespace Editor
                 var fs = new FileSystem();
                 ServiceRegistry.Register<IFileSystem>(fs);
 
-                // Use the project path as the base for content resolution
-                var contentRoot = Path.Combine(projectPath, Settings.Current.ContentRoot);
-                var resolver = new ContentResolver(fs, contentRoot);
+                // ContentResolver expects absolute path to content root
+                var contentRootAbsolute = Path.Combine(projectPath, Settings.Current.ContentRoot);
+                var resolver = new ContentResolver(fs, contentRootAbsolute);
                 ServiceRegistry.Register<IContentResolver>(resolver);
 
                 var rm = new ResourceManager(resolver, fs, logger);
