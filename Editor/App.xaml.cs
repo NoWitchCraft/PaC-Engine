@@ -11,6 +11,8 @@ namespace Editor
 {
     public partial class App : Application
     {
+        public static EventLogger? EventLogger { get; private set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -21,9 +23,24 @@ namespace Editor
 
                 ServiceRegistry.Clear();
 
-                var logger = new ConsoleLogger(LogLevel.Info);
-                ServiceRegistry.Register<ILogger>(logger);
-                Log.Use(logger);
+                // Create MultiLogger with Console, File, and Event loggers
+                var multiLogger = new MultiLogger(LogLevel.Debug);
+                
+                var consoleLogger = new ConsoleLogger(LogLevel.Info);
+                multiLogger.AddLogger(consoleLogger);
+                
+                // Add file logger
+                var logDir = System.IO.Path.Combine(AppContext.BaseDirectory, "Logs");
+                var logFile = System.IO.Path.Combine(logDir, $"editor_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+                var fileLogger = new FileLogger(logFile, LogLevel.Debug);
+                multiLogger.AddLogger(fileLogger);
+                
+                // Add event logger for UI
+                EventLogger = new EventLogger(LogLevel.Debug);
+                multiLogger.AddLogger(EventLogger);
+                
+                ServiceRegistry.Register<ILogger>(multiLogger);
+                Log.Use(multiLogger);
 
                 var fs = new FileSystem();
                 ServiceRegistry.Register<IFileSystem>(fs);
@@ -31,7 +48,7 @@ namespace Editor
                 var resolver = new ContentResolver(fs, Settings.Current.ContentRoot);
                 ServiceRegistry.Register<IContentResolver>(resolver);
 
-                var rm = new ResourceManager(resolver, fs, logger);
+                var rm = new ResourceManager(resolver, fs, multiLogger);
                 rm.RegisterDefaultLoaders();
                 ServiceRegistry.Register<IResourceManager>(rm);
 

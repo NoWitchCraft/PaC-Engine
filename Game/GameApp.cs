@@ -19,9 +19,20 @@ namespace Game
 
             ServiceRegistry.Clear();
 
-            var logger = new ConsoleLogger(LogLevel.Debug);
-            ServiceRegistry.Register<ILogger>(logger);
-            Log.Use(logger);
+            // Create MultiLogger with Console and File loggers
+            var multiLogger = new MultiLogger(LogLevel.Debug);
+            
+            var consoleLogger = new ConsoleLogger(LogLevel.Debug);
+            multiLogger.AddLogger(consoleLogger);
+            
+            // Add file logger
+            var logDir = System.IO.Path.Combine(System.AppContext.BaseDirectory, "Logs");
+            var logFile = System.IO.Path.Combine(logDir, $"game_{System.DateTime.Now:yyyyMMdd_HHmmss}.log");
+            var fileLogger = new FileLogger(logFile, LogLevel.Debug);
+            multiLogger.AddLogger(fileLogger);
+            
+            ServiceRegistry.Register<ILogger>(multiLogger);
+            Log.Use(multiLogger);
 
             var fs = new FileSystem();
             ServiceRegistry.Register<IFileSystem>(fs);
@@ -29,7 +40,7 @@ namespace Game
             var resolver = new ContentResolver(fs, Settings.Current.ContentRoot);
             ServiceRegistry.Register<IContentResolver>(resolver);
 
-            var rm = new ResourceManager(resolver, fs, logger);
+            var rm = new ResourceManager(resolver, fs, multiLogger);
             rm.RegisterDefaultLoaders();
             ServiceRegistry.Register<IResourceManager>(rm);
 

@@ -19,6 +19,8 @@ namespace Editor
         private string? _currentScenePath;
 
         private HashSet<string> _expandedNames = new();
+        
+        private LogPanel? _logPanel;
 
         private enum TreeKind { Scene, HotspotGroup, Hotspot, EntitiesGroup }
 
@@ -417,6 +419,25 @@ namespace Editor
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void LogViewerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.EventLogger == null)
+            {
+                MessageBox.Show(this, "Event logger is not initialized.", "Log Viewer", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (_logPanel == null || !_logPanel.IsLoaded)
+            {
+                _logPanel = new LogPanel(App.EventLogger);
+                _logPanel.Owner = this;
+            }
+
+            _logPanel.Show();
+            _logPanel.Activate();
         }
     }
 
