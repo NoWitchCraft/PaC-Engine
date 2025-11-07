@@ -12,7 +12,7 @@
 - [x] Projektstruktur (`Engine`, `Game`, `Editor`)
 - [x] Settings-System (`settings.json`, Loader)
 - [x] Logging-System (Debug, Info, Warn, Error mit Timestamp)
-- [ ] Utility-Klassen (`Vector2`, `RectF`, `MathHelper`, etc.)
+- [x] Utility-Klassen (`Vector2`, `RectF`, `MathHelper`, etc.)
 - [ ] Core-Loop: Update / Render-Pipeline
 - [ ] ECS- / Entity-System (Actors, Components, Systems)
 - [ ] Event-System (globale Variablen, Switches, Trigger)
@@ -116,11 +116,7 @@
 ---
 
 ## 🧩 NÄCHSTE SCHRITTE (nach aktuellem Stand)
-1. 🔲 Scene-Validation & Status-Feedback (SC2.3)  
-2. 🔲 Viewport-System (SC3)  
-3. 🔲 Editor-Start-Hub / Game-Projekt-Anlage (SC4)  
-4. 🔲 Logging & Debug-System (für Engine & Editor gemeinsam)  
-5. 🔲 Erste Engine-Runtime: Scene-Load & Render-Loop  
+
 
 ---
 

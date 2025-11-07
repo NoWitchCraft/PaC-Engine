@@ -1,0 +1,33 @@
+namespace Engine.Utils
+{
+    public sealed class XorShiftRng
+    {
+        private uint _x, _y, _z, _w;
+
+        public XorShiftRng(uint seed = 2463534242u)
+        {
+            _x = seed; _y = seed ^ 0x9E3779B9u; _z = seed << 13; _w = seed >> 9;
+            if (_x == 0) _x = 1;
+        }
+
+        public uint Next()
+        {
+            uint t = _x ^ (_x << 11);
+            _x = _y; _y = _z; _z = _w;
+            _w = _w ^ (_w >> 19) ^ t ^ (t >> 8);
+            return _w;
+        }
+
+        public float NextFloat01()
+            => (Next() & 0x00FFFFFF) / 16777216f; // 24-bit
+
+        public int RangeInt(int minInclusive, int maxExclusive)
+        {
+            if (maxExclusive <= minInclusive) return minInclusive;
+            return (int)(minInclusive + (Next() % (uint)(maxExclusive - minInclusive)));
+        }
+
+        public float RangeFloat(float min, float max)
+            => min + (max - min) * NextFloat01();
+    }
+}
