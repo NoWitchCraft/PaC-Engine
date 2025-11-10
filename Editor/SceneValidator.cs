@@ -38,9 +38,9 @@ namespace Editor
                 }
 
                 // Rect
-                if (hs.Rect == null)
+                if (hs.Rect.IsEmpty)
                 {
-                    vr.Add(IssueSeverity.Error, "HS_RECT_NULL", "Hotspot Rect fehlt.", $"{basePath}.Rect");
+                    vr.Add(IssueSeverity.Warning, "HS_RECT_EMPTY", "Hotspot Rect ist leer (Width oder Height ist 0).", $"{basePath}.Rect");
                 }
                 else
                 {

@@ -21,7 +21,7 @@ namespace Game
             // Render-Infrastruktur
             var renderer = new Renderer();                 // deine Layer-Pipeline
             var updates  = new UpdateHub();                // tickt IUpdatable (Anim etc.)
-            var host     = new RaylibRendererHost(Color.BLACK);
+            var host     = new RaylibRendererHost(Color.Black);
             var input    = ServiceRegistry.Get<Engine.Input.IInputService>();
 
             // Hier (optional) Renderables registrieren (BG-Sprite, Hotspot-Gizmos)
