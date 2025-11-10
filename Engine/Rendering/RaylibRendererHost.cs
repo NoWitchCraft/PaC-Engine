@@ -11,7 +11,7 @@ namespace Engine.Rendering
 
         public RaylibRendererHost(Color? clear = null)
         {
-            _clear = clear ?? Color.BLACK;
+            _clear = clear ?? Color.Black;
         }
 
         public void BeginFrame()

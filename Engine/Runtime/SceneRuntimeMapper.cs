@@ -11,12 +11,10 @@ namespace Engine.Runtime
             var list = new List<HotspotRuntime>(dto.Hotspots.Count);
             foreach (var hs in dto.Hotspots)
             {
-                // defensiv: falls Rect null war, ersetze mit 0-Rect
-                var rect = hs.Rect ?? new RectF { X = 0, Y = 0, Width = 0, Height = 0 };
                 list.Add(new HotspotRuntime(
                     id: hs.Id ?? "",
                     labelKey: hs.LabelKey ?? "",
-                    rect: rect,
+                    rect: hs.Rect,
                     eventPathId: hs.EventPathId,
                     cursorId: hs.CursorId,
                     highlight: hs.Highlight
