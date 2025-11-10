@@ -14,6 +14,12 @@ namespace Editor
             
             var vr = new ValidationResult();
 
+            if (scene == null)
+            {
+                vr.Add(IssueSeverity.Error, "SCENE_NULL", "Scene object is null", "Scene");
+                return vr;
+            }
+
             // Scene-Basics
             if (string.IsNullOrWhiteSpace(scene.Id))
                 vr.Add(IssueSeverity.Error, "SCENE_ID_EMPTY", "Scene Id cant be empty", "Scene.Id");
