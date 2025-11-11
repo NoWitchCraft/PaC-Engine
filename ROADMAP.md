@@ -13,7 +13,7 @@
 - [x] Settings-System (`settings.json`, Loader)
 - [x] Logging-System (Debug, Info, Warn, Error mit Timestamp)
 - [x] Utility-Klassen (`Vector2`, `RectF`, `MathHelper`, etc.)
-- [ ] Core-Loop: Update / Render-Pipeline
+- [x] Core-Loop: Update / Render-Pipeline
 - [ ] ECS- / Entity-System (Actors, Components, Systems)
 - [ ] Event-System (globale Variablen, Switches, Trigger)
 - [ ] Resource-Manager (Asset-Caching, Lazy-Loading, Cleanup)
