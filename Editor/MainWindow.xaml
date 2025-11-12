@@ -4,7 +4,8 @@
         xmlns:local="clr-namespace:Editor"
         xmlns:scene="clr-namespace:Engine.Data.Scene;assembly=Engine"
         xmlns:common="clr-namespace:Engine.Common;assembly=Engine"
-        Title="PaCEngine Editor" Height="720" Width="1280">
+        Title="PaCEngine Editor" Height="720" Width="1280"
+        Background="#1E1E1E">
     <Window.Resources>
 
         <local:KindEqualsToVisibilityConverter x:Key="KindToVisibility"/>
@@ -104,6 +105,7 @@
                     Padding="12,6"
                     Background="#993a1a1a"
                     Foreground="White"
+                    BorderBrush="#3F3F46"
                     Click="DeleteHotspot_Click"
                     Tag="{Binding}" />
             </StackPanel>
@@ -153,40 +155,50 @@
             </Grid.ColumnDefinitions>
 
             <!-- Hierarchy (links) -->
-            <Border Grid.Column="0" BorderBrush="#333" BorderThickness="0,0,1,0">
-                <TreeView x:Name="HierarchyTree"
+            <Border Grid.Column="0" BorderBrush="#3F3F46" BorderThickness="0,0,1,0" Background="#1E1E1E">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Hierarchy" FontWeight="Bold" Padding="8" Background="#2D2D30" Foreground="White"/>
+                    <TreeView x:Name="HierarchyTree"
           SelectedItemChanged="HierarchyTree_SelectedItemChanged"
-          PreviewMouseRightButtonDown="HierarchyTree_PreviewMouseRightButtonDown">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Add Hotspot"
+          PreviewMouseRightButtonDown="HierarchyTree_PreviewMouseRightButtonDown"
+          Background="#1E1E1E"
+          BorderThickness="0">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu Background="#2D2D30" BorderBrush="#3F3F46">
+                                            <MenuItem Header="Add Hotspot"
                       Visibility="{Binding Kind, Converter={StaticResource KindToVisibility}, ConverterParameter=HotspotGroup}"
-                      Click="CtxAddHotspot_Click"/>
-                                        <MenuItem Header="Delete Hotspot"
+                      Click="CtxAddHotspot_Click"
+                      Foreground="White"/>
+                                            <MenuItem Header="Delete Hotspot"
                       Visibility="{Binding Kind, Converter={StaticResource KindToVisibility}, ConverterParameter=Hotspot}"
-                      Click="CtxDeleteHotspot_Click"/>
-                                    </ContextMenu>
-                                </StackPanel.ContextMenu>
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
+                      Click="CtxDeleteHotspot_Click"
+                      Foreground="White"/>
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
+                                    <TextBlock Text="{Binding Name}" Foreground="White" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
             </Border>
 
             <!-- Center: Platzhalter für Viewport (später) -->
-            <Grid Grid.Column="1">
-                <TextBlock Text="Viewport (coming soon…)" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.4"/>
+            <Grid Grid.Column="1" Background="#252526">
+                <TextBlock Text="Viewport (coming soon…)" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.4" Foreground="#808080"/>
             </Grid>
 
             <!-- Inspector (rechts) -->
-            <Border Grid.Column="2" BorderBrush="#333" BorderThickness="1,0,0,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ContentControl x:Name="InspectorHost" />
-                </ScrollViewer>
+            <Border Grid.Column="2" BorderBrush="#3F3F46" BorderThickness="1,0,0,0" Background="#1E1E1E">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Inspector" FontWeight="Bold" Padding="8" Background="#2D2D30" Foreground="White"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#1E1E1E">
+                        <ContentControl x:Name="InspectorHost" />
+                    </ScrollViewer>
+                </DockPanel>
             </Border>
         </Grid>
     </DockPanel>
