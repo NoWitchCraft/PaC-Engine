@@ -2,6 +2,7 @@ using Engine.Diagnostics;
 using Engine.Rendering;
 using Engine.Runtime;
 using Raylib_cs;
+using Engine.Core;
 
 namespace Game
 {
@@ -9,7 +10,7 @@ namespace Game
     {
         public static void LogHitUnderMouse()
         {
-            var cam    = ServiceRegistry.Get<Camera2D>();
+            var cam    = ServiceRegistry.Get<Engine.Rendering.Camera2D>();
             var scenes = ServiceRegistry.Get<ISceneService>();
 
             var mp    = Raylib.GetMousePosition();

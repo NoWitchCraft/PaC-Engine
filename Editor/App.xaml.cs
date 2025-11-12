@@ -49,7 +49,11 @@ namespace Editor
                 ServiceRegistry.Register<IContentResolver>(resolver);
 
                 var rm = new ResourceManager(resolver, fs, multiLogger);
-                rm.RegisterDefaultLoaders();
+                // In the Editor we avoid registering loaders that force Raylib-cs to load (e.g. textures).
+                // Register only basic loaders needed by the editor UI.
+                rm.RegisterLoader<string>(abs => fs.ReadAllText(abs));
+                rm.RegisterLoader<byte[]>(abs => fs.ReadAllBytes(abs));
+
                 ServiceRegistry.Register<IResourceManager>(rm);
 
                 Log.Info(nameof(App), $"Editor ContentRootAbs = {resolver.ContentRootAbsolute}");

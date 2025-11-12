@@ -8,11 +8,18 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <None Remove="Content\Rooms\first_room_bg.png" />
     <None Remove="Content\Scenes\first.scene.json" />
     <None Remove="settings.json" />
   </ItemGroup>
   
   <ItemGroup>
+    <Content Include="Content\Rooms\test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Rooms\first_room_bg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Scenes\first.scene.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
