@@ -1,3 +1,4 @@
+using System.Numerics;
 using Raylib_cs;
 
 namespace Engine.Rendering
@@ -7,10 +8,12 @@ namespace Engine.Rendering
     /// </summary>
     public sealed class RaylibRendererHost : IRendererHost
     {
+        private readonly Camera2D _cam;
         private readonly Color _clear;
 
         public RaylibRendererHost(Color? clear = null)
         {
+            _cam = camera;
             _clear = clear ?? Color.Black;
         }
 
@@ -18,12 +21,20 @@ namespace Engine.Rendering
         {
             Raylib.BeginDrawing();
             Raylib.ClearBackground(_clear);
-            // Optional später: Raylib.BeginMode2D(camera);
+            
+            var rc = new Raylib_cs.Camera2D
+            {
+                target = new Vector2(_cam.Position.X, _cam.Position.Y),
+                offset = Vector2.Zero,
+                rotation = 0f,
+                zoom = _camera.Zoom
+            };
+            Raylib.BeginMode2D(rc);
         }
 
         public void EndFrame()
         {
-            // Optional später: Raylib.EndMode2D();
+            Raylib.EndMode2D();
             Raylib.EndDrawing();
         }
     }

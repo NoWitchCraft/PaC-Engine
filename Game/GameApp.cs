@@ -65,7 +65,11 @@ namespace Game
 
         public void Update(float dt)
         {
-            // Game-Logik pro Fixed-Step (noch leer)
+            var input = ServiceRegistry.Get<IInputService>();
+            if (input.WasPressed(Keys.MouseLeft))
+            {
+                HitTestHelper.LogHitUnderMouse();
+            }
         }
 
         public void Shutdown()

@@ -34,6 +34,10 @@ namespace Engine.Resources
         {
             RegisterLoader<string>(abs => _fs.ReadAllText(abs));
             RegisterLoader<byte[]>(abs => _fs.ReadAllBytes(abs));
+            RegisterLoader<Engine.Rendering.RlTexture>(abs => {
+                var tex = Raylib_cs.Raylib.LoadTexture(abs);
+                return new Engine.Rendering.RlTexture(abs);
+            });
             // Weitere Default-Loader kann man hier nachrüsten (z. B. JsonDocument, Bitmap, etc.)
         }
 
