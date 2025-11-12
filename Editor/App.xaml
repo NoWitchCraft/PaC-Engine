@@ -4,6 +4,101 @@
              xmlns:local="clr-namespace:Editor"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- Modern Dark Theme - Matching Logger -->
+        
+        <!-- Color Resources -->
+        <SolidColorBrush x:Key="DarkBackground" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="MediumBackground" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="LightBackground" Color="#252526"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#3F3F46"/>
+        <SolidColorBrush x:Key="ForegroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#0E639C"/>
+        <SolidColorBrush x:Key="AccentLightBrush" Color="#569CD6"/>
+        <SolidColorBrush x:Key="MutedForeground" Color="#808080"/>
+        
+        <!-- Window Style -->
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="{StaticResource DarkBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- TextBlock Style -->
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- TextBox Style -->
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{StaticResource LightBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+        <!-- Button Style -->
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource MediumBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- CheckBox Style -->
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- GroupBox Style -->
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        </Style>
+        
+        <!-- TreeView Style -->
+        <Style TargetType="{x:Type TreeView}">
+            <Setter Property="Background" Value="{StaticResource DarkBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        </Style>
+        
+        <!-- TreeViewItem Style -->
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- Menu Style -->
+        <Style TargetType="{x:Type Menu}">
+            <Setter Property="Background" Value="{StaticResource MediumBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- MenuItem Style -->
+        <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- StatusBar Style -->
+        <Style TargetType="{x:Type StatusBar}">
+            <Setter Property="Background" Value="{StaticResource MediumBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+        
+        <!-- ScrollViewer Style -->
+        <Style TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Background" Value="{StaticResource DarkBackground}"/>
+        </Style>
+        
+        <!-- Border Style -->
+        <Style TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        </Style>
          
     </Application.Resources>
 </Application>
