@@ -3,7 +3,9 @@
   "backgroundPath": "Rooms/first_room_bg.png",
   "startPosition": {
     "x": 220,
-    "y": 610
+    "y": 610,
+    "length": 648.4597,
+    "lengthSquared": 420500
   },
   "walkPath": null,
   "hotspots": [
@@ -14,10 +16,45 @@
         "x": 900,
         "y": 520,
         "width": 180,
-        "height": 120
+        "height": 120,
+        "left": 900,
+        "top": 520,
+        "right": 1080,
+        "bottom": 640,
+        "isEmpty": false,
+        "center": {
+          "x": 990,
+          "y": 580,
+          "length": 1147.3883,
+          "lengthSquared": 1316500
+        }
       },
       "eventPathId": "console_inspect",
       "cursorId": "inspect",
+      "highlight": true
+    },
+    {
+      "id": "",
+      "labelKey": "hotspot",
+      "rect": {
+        "x": 64,
+        "y": 64,
+        "width": 160,
+        "height": 80,
+        "left": 64,
+        "top": 64,
+        "right": 224,
+        "bottom": 144,
+        "isEmpty": false,
+        "center": {
+          "x": 144,
+          "y": 104,
+          "length": 177.62883,
+          "lengthSquared": 31552
+        }
+      },
+      "eventPathId": null,
+      "cursorId": null,
       "highlight": true
     }
   ],
